@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using forum_app.Models;
+using forum_app.Services.UserService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace forum_app.Controllers
@@ -11,29 +12,29 @@ namespace forum_app.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        private static List<User> users = new List<User>{
-            new User(),
+        
+        public IUserService _userService;
 
-            new User {UserId = 1, Username = "Abebe", Password = "Abebe123"},
-
-            new User {UserId = 2, Username = "Kebede", Password = "Kebede123"}
-        };
+        public UserController(IUserService userService)
+        {
+            _userService = userService;
+        }
         
         [HttpGet("GetAll")]
-        public ActionResult<List<User>> GetAll(){
-            return Ok(users);
+        public async Task<ActionResult<ServiceResponse<List<User>>>> GetAll(){
+            return Ok( await _userService.GetAll());
         }
 
         [HttpGet("{id}")]
-        public ActionResult<User> GetSingle(int id){
-            return Ok(users.FirstOrDefault(u => u.UserId == id));
+        public async Task<ActionResult<ServiceResponse<User>>> GetSingle(int id){
+            return Ok( await _userService.GetSingle(id));
         }
 
         [HttpPost]
 
-        public ActionResult<List<User>> AddUser(User newUser){
-            users.Add(newUser);
-            return Ok(users);
+        public async Task<ActionResult<ServiceResponse<List<User>>>> AddUser(User newUser){
+            
+            return Ok( await _userService.AddUser(newUser));
         }
 
     }

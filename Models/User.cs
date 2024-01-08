@@ -15,8 +15,8 @@ namespace forum_app.Models
         public string Password { get; set; } = "ephrem123";
         
         
-        public List<Question> Questions { get; set; }
-        public List<Answer> Answers { get; set; }  
-        public List<Vote> Votes { get; set; }      
+        // public List<Question> Questions { get; set; }
+        // public List<Answer> Answers { get; set; }  
+        // public List<Vote> Votes { get; set; }      
     }
 }
