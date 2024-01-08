@@ -37,5 +37,16 @@ namespace forum_app.Controllers
             return Ok( await _userService.AddUser(newUser));
         }
 
+        [HttpPut]
+        public async Task<ActionResult<ServiceResponse<User>>> UpdateUser(int id, User updatedUser){
+
+            return Ok( await _userService.UpdateUser(id, updatedUser));
+        }
+
+        [HttpDelete]
+        public async Task<ActionResult<ServiceResponse<User>>> DeleteUser(int id){
+            return Ok( await _userService.DeleteUser(id));
+        }
+
     }
 }

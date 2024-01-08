@@ -11,5 +11,7 @@ namespace forum_app.Services.UserService
         Task<ServiceResponse<List<User>>> GetAll();
         Task<ServiceResponse<User>> GetSingle(int id);
         Task<ServiceResponse<List<User>>> AddUser(User newUser);
+        Task<ServiceResponse<User>> UpdateUser(int id, User updatedUser);
+        Task<ServiceResponse<User>> DeleteUser(int id);
     }
 }
