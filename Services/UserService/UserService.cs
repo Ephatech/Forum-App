@@ -1,3 +1,4 @@
+global using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,32 +17,41 @@ namespace forum_app.Services.UserService
             new User {UserId = 2, Username = "Kebede", Password = "Kebede123"}
         };
 
-        public async Task<ServiceResponse<List<User>>> AddUser(User newUser)
+        private readonly IMapper _mapper;
+
+        public UserService(IMapper mapper)
         {
-            var serviceResponse = new ServiceResponse<List<User>>();
-            users.Add(newUser);
-            serviceResponse.Data = users;
+            _mapper = mapper;
+        }
+
+        public async Task<ServiceResponse<List<GetUserDto>>> AddUser(AddUserDto newUser)
+        {
+            var serviceResponse = new ServiceResponse<List<GetUserDto>>();
+            var user = _mapper.Map<User>(newUser);
+            user.UserId = users.Max(u => u.UserId) +1;
+            users.Add(user);
+            serviceResponse.Data = users.Select(u => _mapper.Map<GetUserDto>(u)).ToList();
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<List<User>>> GetAll()
+        public async Task<ServiceResponse<List<GetUserDto>>> GetAll()
         {
-            var serviceResponse = new ServiceResponse<List<User>>();
-            serviceResponse.Data = users;
+            var serviceResponse = new ServiceResponse<List<GetUserDto>>();
+            serviceResponse.Data = users.Select(u => _mapper.Map<GetUserDto>(u)).ToList();
             return serviceResponse;
          }
 
-        public async Task<ServiceResponse<User>> GetSingle(int id)
+        public async Task<ServiceResponse<GetUserDto>> GetSingle(int id)
         {
-            var serviceResponse = new ServiceResponse<User>();
+            var serviceResponse = new ServiceResponse<GetUserDto>();
             var user = users.FirstOrDefault(u => u.UserId == id);
-            serviceResponse.Data = user;
+            serviceResponse.Data = _mapper.Map<GetUserDto>(user);
             return serviceResponse;      
         }
 
-        public async Task<ServiceResponse<User>> UpdateUser(int id, User updatedUser)
+        public async Task<ServiceResponse<GetUserDto>> UpdateUser(int id, AddUserDto updatedUser)
         {
-            var serviceResponse = new ServiceResponse<User>();
+            var serviceResponse = new ServiceResponse<GetUserDto>();
 
             try
             {
@@ -61,7 +71,7 @@ namespace forum_app.Services.UserService
 
                 // You may want to perform additional validation or business logic here
 
-                serviceResponse.Data = existingUser;
+                serviceResponse.Data = _mapper.Map<GetUserDto>(existingUser);
                 serviceResponse.Message = "User updated successfully";
             }
             catch (Exception ex)
@@ -73,9 +83,9 @@ namespace forum_app.Services.UserService
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<User>> DeleteUser(int id)
+        public async Task<ServiceResponse<List<GetUserDto>>> DeleteUser(int id)
         {
-            var serviceResponse = new ServiceResponse<User>();
+            var serviceResponse = new ServiceResponse<List<GetUserDto>>();
 
             try
             {

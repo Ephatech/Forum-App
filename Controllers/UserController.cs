@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using forum_app.Models;
 using forum_app.Services.UserService;
 using Microsoft.AspNetCore.Mvc;
+using forum_app.DTOs;
 
 namespace forum_app.Controllers
 {
@@ -21,31 +22,41 @@ namespace forum_app.Controllers
         }
         
         [HttpGet("GetAll")]
-        public async Task<ActionResult<ServiceResponse<List<User>>>> GetAll(){
+        public async Task<ActionResult<ServiceResponse<List<GetUserDto>>>> GetAll(){
             return Ok( await _userService.GetAll());
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ServiceResponse<User>>> GetSingle(int id){
+        public async Task<ActionResult<ServiceResponse<GetUserDto>>> GetSingle(int id){
             return Ok( await _userService.GetSingle(id));
         }
 
         [HttpPost]
 
-        public async Task<ActionResult<ServiceResponse<List<User>>>> AddUser(User newUser){
+        public async Task<ActionResult<ServiceResponse<List<GetUserDto>>>> AddUser(AddUserDto newUser){
             
             return Ok( await _userService.AddUser(newUser));
         }
 
-        [HttpPut]
-        public async Task<ActionResult<ServiceResponse<User>>> UpdateUser(int id, User updatedUser){
+        [HttpPut("{id}")]
+        public async Task<ActionResult<ServiceResponse<GetUserDto>>> UpdateUser(int id, AddUserDto updatedUser){
 
-            return Ok( await _userService.UpdateUser(id, updatedUser));
+            var response = await _userService.UpdateUser(id, updatedUser);
+            if(response is  null){
+                return NotFound(response);
+            }else{
+                return Ok(response);
+            }
         }
 
-        [HttpDelete]
-        public async Task<ActionResult<ServiceResponse<User>>> DeleteUser(int id){
-            return Ok( await _userService.DeleteUser(id));
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<ServiceResponse<List<GetUserDto>>>> DeleteUser(int id){
+            var response = await _userService.DeleteUser(id);
+            if(response is  null){
+                return NotFound(response);
+            }else{
+                return Ok(response);
+            }
         }
 
     }
