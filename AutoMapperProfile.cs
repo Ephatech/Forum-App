@@ -12,6 +12,9 @@ namespace forum_app
         {
             CreateMap<User, GetUserDto>();
             CreateMap<AddUserDto, User>();
+
+            CreateMap<Question, GetQuestionDto>();
+            CreateMap<AddQuestionDto, Question>();
         }
     }
 }

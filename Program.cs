@@ -1,7 +1,9 @@
 global using forum_app.Models;
 global using forum_app.DTOs.User;
+global using forum_app.DTOs.Question;
 global using forum_app.Controllers;
 using forum_app.Services.UserService;
+using forum_app.Services.QuestionService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IQuestionService, QuestionService>();
 
 
 var app = builder.Build();
